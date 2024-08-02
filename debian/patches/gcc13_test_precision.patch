@@ -1,0 +1,35 @@
+Index: xtensor/test/test_xbuilder.cpp
+===================================================================
+--- xtensor.orig/test/test_xbuilder.cpp	2024-02-04 22:00:19.327668407 +0100
++++ xtensor/test/test_xbuilder.cpp	2024-02-04 22:01:28.244214262 +0100
+@@ -162,8 +162,8 @@
+         auto l3 = arange<float>(0, 0.99f, 0.25f);
+         decltype(l3)::shape_type expected_shape_2 = {4};
+         ASSERT_EQ(l3.shape(), expected_shape_2);
+-        ASSERT_EQ(l3[{0}], 0.f);
+-        ASSERT_EQ(0.25f * 3.f, l3[{3}]);
++        EXPECT_DOUBLE_EQ(l3[{0}], 0.f);
++        EXPECT_DOUBLE_EQ(0.25f * 3.f, l3[{3}]);
+ 
+         auto l4 = arange<int>(0, 10, 3);
+         ASSERT_EQ(l4.shape(), expected_shape_2);
+Index: xtensor/test/test_xcomplex.cpp
+===================================================================
+--- xtensor.orig/test/test_xcomplex.cpp	2024-02-04 22:00:19.327668407 +0100
++++ xtensor/test/test_xcomplex.cpp	2024-02-04 22:02:44.040821846 +0100
+@@ -311,12 +311,12 @@
+         xt::real(a) = 123.321L;
+         xt::imag(a) = -123.321L;
+ 
+-        EXPECT_EQ(a(4, 4), cmplx(123.321L, -123.321L));
++        EXPECT_DOUBLE_EQ(a(4, 4), cmplx(123.321L, -123.321L));
+ 
+         xt::real(a) = xt::imag(a);
+ 
+-        EXPECT_EQ(a(0, 0), cmplx(-123.321L, -123.321L));
+-        EXPECT_EQ(a(4, 4), cmplx(-123.321L, -123.321L));
++        EXPECT_DOUBLE_EQ(a(0, 0), cmplx(-123.321L, -123.321L));
++        EXPECT_DOUBLE_EQ(a(4, 4), cmplx(-123.321L, -123.321L));
+     }
+ 
+     TEST(xcomplex, build_from_double)

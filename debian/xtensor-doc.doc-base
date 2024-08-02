@@ -1,0 +1,9 @@
+Document: xtensor-doc
+Title: xtensor Documentation
+Author: Johan Mabille and Sylvain Corlay
+Abstract: This is the reference documentation for the xtensor library.
+Section: Programming/C++
+
+Format: HTML
+Index: /usr/share/doc/xtensor-doc/html/index.html
+Files: /usr/share/doc/xtensor-doc/html/*.html

@@ -1,0 +1,15 @@
+Index: xtensor/test/CMakeLists.txt
+===================================================================
+--- xtensor.orig/test/CMakeLists.txt	2023-09-25 22:01:01.700349961 +0200
++++ xtensor/test/CMakeLists.txt	2023-09-25 22:05:11.245964268 +0200
+@@ -222,7 +222,9 @@
+ endif()
+ 
+ # remove xinfo tests for compilers < GCC 5
+-if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5))
++# or clang >= 16 (upstream Issue #2694)
++if( (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5))
++    OR (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 16)))
+     list(REMOVE_ITEM XTENSOR_TESTS test_xinfo.cpp)
+ endif()
+ 

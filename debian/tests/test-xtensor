@@ -1,0 +1,28 @@
+set -e
+
+if [ "x${CC}" = "x" ]; then
+  CC=gcc
+fi
+if [ "x${CXX}" = "x" ]; then
+  CXX=g++
+fi
+
+#if dpkg-query -s libxsimd-dev >/dev/null 2>&1; then
+#  BUILD_OPTIONS=-DXTENSOR_USE_XSIMD=ON
+#fi
+# xsimd 12 support is not available yet
+BUILD_OPTIONS=-DXTENSOR_USE_XSIMD=OFF
+
+# mark i386 as having flakey tests (xreducer.average)
+DEB_HOST_ARCH=`dpkg-architecture -q DEB_HOST_ARCH`
+if [ "x$DEB_HOST_ARCH" = "xi386" ]; then
+  BUILD_OPTIONS="${BUILD_OPTIONS} -DCMAKE_CXX_FLAGS='-DMARK_FLAKEY_TEST'"
+fi
+
+cp -r ./test/* "$AUTOPKGTEST_TMP"
+cd "$AUTOPKGTEST_TMP"
+
+echo "Testing with ${CC} and ${CXX}:"
+mkdir build && cd build
+CC=${CC} CXX=${CXX} cmake .. ${BUILD_OPTIONS}
+CTEST_OUTPUT_ON_FAILURE=1 make -j $(nproc) VERBOSE=1 xtest

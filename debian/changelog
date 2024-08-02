@@ -1,5 +1,444 @@
-template-repository (1.0-1) unstable; urgency=medium
+xtensor (0.25.0-1) unstable; urgency=medium
 
-  * Initial release
+  * New upstream release
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Drew Parsons <dparsons@debian.org>  Sun, 04 Feb 2024 22:18:19 +0100
+
+xtensor (0.24.7-5) unstable; urgency=medium
+
+  * Disable xsimd support.
+    xtensor currently requires xsimd 10, but xsimd 12 is released and
+    required for stable SIMD support on less common architectures like
+    armhf. So disable xsimd support until xsimd 12 can be used.
+    See Bug#1061243 and upstream issue #2769.
+
+ -- Drew Parsons <dparsons@debian.org>  Sun, 21 Jan 2024 14:14:58 +0100
+
+xtensor (0.24.7-4) unstable; urgency=medium
+
+  * include !ppc64el in libxsimd-dev upper version for debian/tests
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 16 Oct 2023 10:39:41 +0200
+
+xtensor (0.24.7-3) unstable; urgency=medium
+
+  * restrict xsimd tests to [!arm64 !armel !armhf ppc64el !riscv64
+    !s390x] xsimd gives errors on arm (neon) Bug#1053090, and on other
+    arches marked as XSIMD_NO_SUPPORTED_ARCHITECTURE, Bug#1053854.
+    Essentially xsimd support is only available on amd64 and i386 at
+    the moment.
+  * clean deprecated build restrictions in debian/rules
+
+ -- Drew Parsons <dparsons@debian.org>  Fri, 13 Oct 2023 10:43:55 +0200
+
+xtensor (0.24.7-2) unstable; urgency=medium
+
+  * debian/tests: apply upper bound Depends: libxsimd-dev (<< 11)
+    cf. upstream Issue#2721. xtensor has a strict version dependency
+    on xsimd, if used. Not appropriate to apply to the package itself
+    since Recommends is optional anyway. Closes: #1052882.
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 09 Oct 2023 14:30:32 +0200
+
+xtensor (0.24.7-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian patch test_xinfo_no_clang.patch disables the test_xinfo
+    test for Clang >= 16. See upstream Issue #2694. Closes: #1042560.
+  * Standards-Version: 4.6.2
+
+ -- Drew Parsons <dparsons@debian.org>  Tue, 26 Sep 2023 01:47:44 +0200
+
+xtensor (0.24.6-1exp2) experimental; urgency=medium
+
+  * push debian patch gcc13_test_precision.patch to experimental
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 27 Jul 2023 12:54:29 +0200
+
+xtensor (0.24.6-1exp1) experimental; urgency=medium
+
+  * New upstream release.
+
+ -- Drew Parsons <dparsons@debian.org>  Fri, 24 Mar 2023 23:41:18 +0100
+
+xtensor (0.24.5-1exp1) experimental; urgency=medium
+
+  * New upstream release.
+  * Run tests with xsimd 10. Test with xsimd 10 on arm64.
+    Closes: #1027990.
+  * debian/tests: use dpkg-query to test if xsimd is installed
+    (to set XTENSOR_USE_XSIMD)
+  * tests now more stable for less common architectures.
+    Closes: #985699.
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 22 Feb 2023 16:38:37 +0100
+
+xtensor (0.24.4-1exp1) experimental; urgency=medium
+
+  * New upstream release.
+    - versioned Build-Depends: libxsimd-dev (>= 10.0.0~)
+      Drop debian patch revert_xsimd8_undo_PR2573.patch
+    - applies debian patch test_findpackage_after_project.patch
+    - bump versioned Depends: xtl-dev (>= 0.7.5~)
+  * set libxtensor-dev Architecture: all, now installs config files
+    to /usr/share
+
+ -- Drew Parsons <dparsons@debian.org>  Tue, 07 Feb 2023 00:12:09 +0100
+
+xtensor (0.24.3-2) unstable; urgency=medium
+
+  * debian patch gcc13_test_precision.patch fixes test failures
+    triggered by precision changes in gcc-13. Closes: #1041372.
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 27 Jul 2023 00:10:32 +0200
+
+xtensor (0.24.3-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Standards-Version: 4.6.1
+  * debian patch revert_xsimd8_undo_PR2573.patch reverts upstream
+    PR2573 (commit 5d1026e) to drop xsimd requirement from 9 back to 8.
+    xsimd 9 is not yet packaged for debian, and new xsimd 9 features
+    are not yet used in xtensor anyway.
+
+ -- Drew Parsons <dparsons@debian.org>  Tue, 08 Nov 2022 11:57:03 +0100
+
+xtensor (0.24.2-2) unstable; urgency=medium
+
+  * debian patch docs_mathjax.patch configures docs to use local
+    mathjax files. Build-Depends-Indep: libjs-mathjax
+  * xsimd/complex/batch errors are resolved by xtensor 0.24 with
+    xsimd 8.1.0-3. Closes: #994246, #994248, #1013625.
+
+ -- Drew Parsons <dparsons@debian.org>  Sat, 25 Jun 2022 11:23:11 +0200
+
+xtensor (0.24.2-1) unstable; urgency=medium
+
+  * New upstream release.
+    - applies debian patch install_headers_PR2462.patch
+
+ -- Drew Parsons <dparsons@debian.org>  Sat, 25 Jun 2022 00:36:27 +0200
+
+xtensor (0.24.0-1exp1) experimental; urgency=medium
+
+  * New upstream release.
+    - applies debian patches doctest_PR2405.patch,
+      test_EXPECT_DOUBLE_EQ_PR2436.patch, doc_sphinx_API.patch
+    - Depends (Recommends): libxsimd-dev (>= 8.0.3~)
+  * update debian/watch to the latest github pattern
+  * debian patch install_headers_PR2462.patch applies upstream PR#2462
+    to fix installation of headers.
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 22 Nov 2021 21:54:42 +0100
+
+xtensor (0.23.10-15) unstable; urgency=medium
+
+  * apply MARK_FLAKEY_TEST for i386 in debian/tests (autopkgtest)
+  * run clang tests from test-xtensor-clang to get name in CI test log
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 28 Oct 2021 13:13:11 +0200
+
+xtensor (0.23.10-14) unstable; urgency=medium
+
+  * manage low-memory arches using "-Os -g0"
+  * manage mipsel by switching off -march=native
+    (cmake -Darch_native_supported=OFF)
+    -mxgot is not needed in that case.
+    Thanks YunQiang Su and Adrian Bunk for help resolving mipsel.
+  * debian patch skip_test_xreducer_average.patch enables failure of
+    xreducer.average test to be ignored if MARK_FLAKEY_TEST is defined.
+    Used to enable i386 to build. Mark test as "may_fail" rather than
+    "skip" to enable the underlying bug to be monitored.
+  * override_dh_auto_clean: remove generated html docs
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 28 Oct 2021 00:50:46 +0200
+
+xtensor (0.23.10-13) unstable; urgency=medium
+
+  * build mipsel with -mxgot (CXXFLAGS and LDFLAGS). Closes: #995867.
+  * remove -g build flag on low-memory arches (required for mipsel)
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 27 Oct 2021 05:28:57 +0200
+
+xtensor (0.23.10-12) unstable; urgency=medium
+
+  * restrict xsimd support to strictly those known to work reliably
+    (amd64 only, and kfreebsd is untested).  Restrict in debian/tests.
+
+ -- Drew Parsons <dparsons@debian.org>  Sat, 16 Oct 2021 13:04:02 +0200
+
+xtensor (0.23.10-11) unstable; urgency=medium
+
+  * drop --no-parallel flag on low-mem arches. Didn't help mipsel.
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 14 Oct 2021 23:30:54 +0200
+
+xtensor (0.23.10-10) experimental; urgency=medium
+
+  * debian patch badarch_skip_test_xnpy.patch provides cmake option
+    BUILD_TEST_XNPY to skip test_xnpy in tests. Required to build
+    s390x, hppa, powerpc, ppc64, sparc64. Default BUILD_TEST_XNPY=ON
+    for other arches. See Bug#985699.
+
+ -- Drew Parsons <dparsons@debian.org>  Sat, 09 Oct 2021 19:24:22 +0200
+
+xtensor (0.23.10-9) experimental; urgency=medium
+
+  * keep applying -O0 to low-mem arches, needed to avoid virtual memory
+    exhausted. Use together with --no-parallel.
+
+ -- Drew Parsons <dparsons@debian.org>  Fri, 08 Oct 2021 09:36:19 +0200
+
+xtensor (0.23.10-8) experimental; urgency=medium
+
+  * drop xsimd hurd-i386 from Build-Depends, not just package Depends.
+  * try handling low-mem arches using dh_auto_build --no-parallel
+    instead of -O0 (to try to achieve a mipsel build)
+  * debian patch doc_sphinx_API.patch updates sphinx API in conf.py to
+    fix doc build with sphinx 4.2.
+  * wrap doc build in https_proxy=127.0.0.1:9 to ensure build
+    independent from network
+  * remove mathjax handling. No longer used in docs.
+
+ -- Drew Parsons <dparsons@debian.org>  Fri, 08 Oct 2021 00:30:44 +0200
+
+xtensor (0.23.10-7) experimental; urgency=medium
+
+  * run tests using doctest instead of googletest
+    - debian patch doctest_PR2405.patch applies upstream PR2405 to
+      convert to doctest
+  * debian patch test_test_EXPECT_DOUBLE_EQ_PR2436.patch applies
+    upstream PR#2436 (plus test_common_macros.hpp) to use
+    EXPECT_DOUBLE_EQ (scalar_near) instead of EXPECT_EQ for tests
+    which failed in i386 builds.
+  * debian patch test_findpackage_after_project.patch finds packages
+    after the test project has been set in tests/CMakeFiles.txt when
+    building tests only using installed packages (debian/tests).
+    Otherwise there is the error "FindThreads only works if either C or
+    CXX language is enabled".
+    cf. https://stackoverflow.com/questions/54349824/
+  * drop hurd-i386 from list of xsimd arches
+    (same problem as i386, x32)
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 20 Sep 2021 18:49:38 +0200
+
+xtensor (0.23.10-6) experimental; urgency=medium
+
+  * drop arm64, i386, x32 from list of xsimd supported arches.
+    See Bug#994246, with upstream xtensor Issue#2433, xsimd Issue#400;
+        Bug#994248, with upstream xtensor Issue#2434, xsimd Issue#287.
+  * Build tests with -O0 on small-memory arches armel mipsel hurd-i386
+    to try to avoid exhausting virtual memory
+
+ -- Drew Parsons <dparsons@debian.org>  Tue, 14 Sep 2021 17:53:20 +0200
+
+xtensor (0.23.10-5) experimental; urgency=medium
+
+  * Build-Depends: python3-sphinx not sphinx-common
+    to ensure sphinx-build is available.
+  * clean docs only in arch-indep builds
+  * use triple-slash with mathjax file reference in docs
+  * include xsimd support in debian/tests (autopkgtest)
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 13 Sep 2021 13:23:11 +0200
+
+xtensor (0.23.10-4) experimental; urgency=medium
+
+  * only build docs in arch-indep build
+  * Build-Depends-Indep: graphviz
+    (provides dot, used when building docs)
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 13 Sep 2021 10:17:19 +0200
+
+xtensor (0.23.10-3) experimental; urgency=medium
+
+  * debian patch xsimd_xcomplex.patch includes xsimd headers with
+    xcomplex where available. See upstream Issue#1898.
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 13 Sep 2021 00:38:56 +0300
+
+xtensor (0.23.10-2) experimental; urgency=medium
+
+  * build with XSIMD support on arches where available.
+    Build-Depends: libxsimd-dev (>= 7.4.4~)
+    [amd64 arm64 i386 hurd-i386 kfreebsd-any m68k sh4 x32]
+    (binary package libxtensor-dev Recommends: libxsimd-dev)
+  * Standards-Version: 4.6.0
+
+ -- Drew Parsons <dparsons@debian.org>  Mon, 06 Sep 2021 21:14:49 +0300
+
+xtensor (0.23.10-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Drew Parsons <dparsons@debian.org>  Fri, 02 Jul 2021 15:31:05 +0200
+
+xtensor (0.23.4-1) experimental; urgency=medium
+
+  * New upstream release.
+
+ -- Drew Parsons <dparsons@debian.org>  Sat, 10 Apr 2021 10:47:43 +0200
+
+xtensor (0.23.1-2) experimental; urgency=medium
+
+  * bounded Depends: xtl-dev (>= 0.7.0~), xtl-dev (<< 0.8)
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 17 Mar 2021 01:08:12 +0100
+
+xtensor (0.23.1-1) experimental; urgency=medium
+
+  * New upstream release.
+    - Build-Depends: xtl-dev (>= 0.7.0~)
+  * also xtensor-dev Depends: xtl-dev (>= 0.7.0~),
+    nlohmann-json3-dev (>= 3.1.1~)
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 10 Mar 2021 09:35:18 +0100
+
+xtensor (0.22.0-5) unstable; urgency=medium
+
+  * apply Breaks, Replaces to the binary package libxtensor-dev,
+    not the source package! Closes: #990817.
+
+ -- Drew Parsons <dparsons@debian.org>  Thu, 08 Jul 2021 18:14:19 +0200
+
+xtensor (0.22.0-4) unstable; urgency=medium
+
+  * Rename the xtensor header-only package to libxtensor-dev.
+    Demote xtensor-dev to a transition package.
+
+ -- Drew Parsons <dparsons@debian.org>  Sun, 25 Apr 2021 20:08:21 +0200
+
+xtensor (0.22.0-3) unstable; urgency=medium
+
+  * use bounded Depends: xtl-dev (>= 0.6.23~), xtl-dev (<< 0.7)
+
+ -- Drew Parsons <dparsons@debian.org>  Tue, 16 Mar 2021 23:38:38 +0100
+
+xtensor (0.22.0-2) unstable; urgency=medium
+
+  * xtensor-dev Depends: nlohmann-json3-dev (>= 3.1.1~), xtl-dev (>= 0.6.23~)
+  * show test output on failure (CTEST_OUTPUT_ON_FAILURE=1)
+
+ -- Drew Parsons <dparsons@debian.org>  Sun, 14 Mar 2021 23:59:22 +0100
+
+xtensor (0.22.0-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Build-Depends: nlohmann-json3-dev (>= 3.1.1~), xtl-dev (>= 0.6.23~)
+    - obsoletes debian patch No-march-native.patch
+      (CMakeLists.txt now checks -march flag before use)
+    - provides usr/include/xtensor.hpp (in xtensor-dev)
+  * Standards-Version: 4.5.1
+  * debhelper compatibility level 13
+    [Build-Depends: debhelper-compat (= 13)]
+  * update upstream Homepage to https://github.com/xtensor-stack/xtensor
+  * debian/control: update Vcs tags to salsa.debian.org
+  * don't set CMAKE_INSTALL_LIBDIR in debian/rules
+    (GNUInstallDirs is used in CMakeLists.txt)
+  * mark xtensor-dev as Architecture: any (Multi-Arch: same)
+    since xtensor.pc and cmake files now reference /usr/lib/<arch-triplet>
+  * Privacy guard: replace external mathjax urls with local file ref.
+    Build-Depends: libjs-mathjax <!nodoc>
+
+ -- Drew Parsons <dparsons@debian.org>  Wed, 10 Mar 2021 03:22:53 +0100
+
+xtensor (0.11.2-1) experimental; urgency=medium
+
+  * New upstream version 0.11.2
+  * Refresh the patch queue
+  * Fixup whitespacing in rules file
+  * Replace occurrences of findstring with filter
+  * Use DEB_BUILD_OPTIONS for the nocheck and nodoc guards
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Fri, 22 Sep 2017 17:14:12 +0100
+
+xtensor (0.10.11-1) unstable; urgency=medium
+
+  * New upstream version 0.10.11
+  * Fixup the Vcs-Browser URI
+  * Bump the standards version to 4.1.0
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Thu, 24 Aug 2017 10:01:51 +0100
+
+xtensor (0.10.10-1) unstable; urgency=medium
+
+  * New upstream version 0.10.10
+  * Bump standards version to 4.0.1, no changes required
+  * Add missing get-orig-source target
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Sat, 12 Aug 2017 10:58:36 +0100
+
+xtensor (0.10.9-1) unstable; urgency=medium
+
+  * New upstream version 0.10.9
+  * Refresh the patch queue
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Tue, 01 Aug 2017 12:05:42 +0100
+
+xtensor (0.10.7-1) unstable; urgency=medium
+
+  * New upstream version 0.10.7
+  * Refresh the patch queue
+  * Drop superfluous CMake options
+  * Mark xtensor-dev section libdevel
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Tue, 11 Jul 2017 17:26:00 +0100
+
+xtensor (0.10.6-1) unstable; urgency=medium
+
+  * New upstream version 0.10.6
+  * Install the pkgconfig file
+  * Bump standards version to 4.0.0, no changes required
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Sun, 09 Jul 2017 23:16:19 +0100
+
+xtensor (0.10.4-1) unstable; urgency=medium
+
+  * New upstream version 0.10.4
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Mon, 12 Jun 2017 21:47:14 +0100
+
+xtensor (0.10.3-1) unstable; urgency=medium
+
+  * New upstream version 0.10.3
+  * Refresh the patch queue
+  * Update copyright information
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Thu, 08 Jun 2017 18:42:29 +0100
+
+xtensor (0.10.2-1) unstable; urgency=medium
+
+  * New upstream version 0.10.2
+  * Mark xtensor-dev Multi-Arch: foreign
+  * Do not build with -march=native
+    - New patch No-march-native.patch
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Thu, 18 May 2017 17:09:24 +0100
+
+xtensor (0.10.1-1) unstable; urgency=medium
+
+  * Fixup the watch regex
+  * New upstream version 0.10.1
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Tue, 09 May 2017 19:19:38 +0100
+
+xtensor (0.9.0-1) unstable; urgency=medium
+
+  * New upstream version 0.9.0
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Tue, 18 Apr 2017 19:34:02 +0100
+
+xtensor (0.8.4-1) unstable; urgency=medium
+
+  * New upstream version 0.8.4
+  * Drop the patch queue, applied upstream
+  * Fix the clean target when nodoc requested
+  * Change doc-base registration to Programming/C++
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Mon, 10 Apr 2017 17:49:06 +0100
+
+xtensor (0.8.3-1) unstable; urgency=low
+
+  * Initial release. (Closes: #858067)
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Thu, 06 Apr 2017 16:55:03 +0100

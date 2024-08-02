@@ -1,4 +1,70 @@
 #!/usr/bin/make -f
 
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+include /usr/share/dpkg/default.mk
+
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+  BUILD_OPTIONS += -DBUILD_TESTS=ON
+else
+  BUILD_OPTIONS += -DBUILD_TESTS=OFF
+endif
+
+# libxsimd-dev is available on some arches such as arm64, i386, m68k,
+# So explicitly switch xsimd support off except for arches where it is known to work reliably.
+# See also Bugs #1053090, #1053854
+#XSIMD_ARCH_LIST := amd64 i386 kfreebsd
+ifneq (,$(findstring $(space)$(DEB_HOST_ARCH)$(space), $(space)$(XSIMD_ARCH_LIST)$(space)))
+  BUILD_OPTIONS += -DXTENSOR_USE_XSIMD=ON
+else
+  BUILD_OPTIONS += -DXTENSOR_USE_XSIMD=OFF
+endif
+
+# try to avoid exhausting virtual memory on small-memory arches
+SMALL_MEM_ARCH_LIST := armel mipsel hurd-i386
+ifneq (,$(findstring $(space)$(DEB_HOST_ARCH)$(space), $(space)$(SMALL_MEM_ARCH_LIST)$(space)))
+  export DEB_CXXFLAGS_MAINT_APPEND = -Os -g0
+endif
+
+# mark i386 as having flakey tests (xreducer.average)
+FLAKEY_TEST_ARCH_LIST := i386
+ifneq (,$(findstring $(space)$(DEB_HOST_ARCH)$(space), $(space)$(FLAKEY_TEST_ARCH_LIST)$(space)))
+  export DEB_CXXFLAGS_MAINT_APPEND = -DMARK_FLAKEY_TEST
+endif
+
+
 %:
-	dh $@
+	dh $@ --with sphinxdoc
+
+override_dh_auto_clean-indep:
+	dh_auto_clean
+ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
+	$(MAKE) -C docs clean
+endif
+	rm -rf docs/build docs/html
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(BUILD_OPTIONS)
+
+override_dh_auto_build-indep: export http_proxy=127.0.0.1:9
+override_dh_auto_build-indep: export https_proxy=127.0.0.1:9
+override_dh_auto_build-indep:
+	dh_auto_build
+ifeq (,$(filter nodoc,$(DEB_BUILD_OPTIONS)))
+	$(MAKE) -C docs html
+endif
+
+override_dh_auto_build-arch:
+	dh_auto_build -a $(DH_AUTO_BUILD_OPTIONS)
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	CTEST_OUTPUT_ON_FAILURE=1 dh_auto_test -- xtest
+endif
+
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp
+
+get-orig-source:
+	uscan --download-current-version --force-download --no-symlink
