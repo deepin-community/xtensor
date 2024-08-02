@@ -1,0 +1,61 @@
+Index: xtensor/CMakeLists.txt
+===================================================================
+--- xtensor.orig/CMakeLists.txt	2023-03-24 23:40:50.441087943 +0100
++++ xtensor/CMakeLists.txt	2023-03-24 23:40:50.433087149 +0100
+@@ -200,6 +200,7 @@
+ OPTION(XTENSOR_ENABLE_ASSERT "xtensor bound check" OFF)
+ OPTION(XTENSOR_CHECK_DIMENSION "xtensor dimension check" OFF)
+ OPTION(BUILD_TESTS "xtensor test suite" OFF)
++OPTION(BUILD_TEST_XNPY "include test_xnpy with tests" ON)
+ OPTION(BUILD_BENCHMARK "xtensor benchmark" OFF)
+ OPTION(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
+ OPTION(DOWNLOAD_GBENCHMARK "download google benchmark and build from source" ON)
+Index: xtensor/test/CMakeLists.txt
+===================================================================
+--- xtensor.orig/test/CMakeLists.txt	2023-03-24 23:40:50.441087943 +0100
++++ xtensor/test/CMakeLists.txt	2023-03-24 23:40:50.433087149 +0100
+@@ -198,7 +198,6 @@
+     test_xnan_functions.cpp
+     test_xnoalias.cpp
+     test_xnorm.cpp
+-    test_xnpy.cpp
+     test_xoptional.cpp
+     test_xoptional_assembly_adaptor.cpp
+     test_xoptional_assembly_storage.cpp
+@@ -227,8 +226,11 @@
+     list(REMOVE_ITEM XTENSOR_TESTS test_xinfo.cpp)
+ endif()
+ 
+-# Add files for npy tests
+-set(XNPY_FILES
++if(BUILD_TEST_XNPY)
++  list(APPEND XTENSOR_TESTS test_xnpy.cpp)
++
++  # Add files for npy tests
++  set(XNPY_FILES
+     bool
+     bool_fortran
+     double
+@@ -236,14 +238,15 @@
+     int
+     unsignedlong
+     unsignedlong_fortran
+-)
++  )
+ 
+-foreach(filename IN LISTS XNPY_FILES)
+-    foreach(suffix .be.npy .le.npy)
+-        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/files/xnpy_files/${filename}${suffix}
+-            ${CMAKE_CURRENT_BINARY_DIR}/files/xnpy_files/${filename}${suffix} COPYONLY)
+-    endforeach()
+-endforeach()
++  foreach(filename IN LISTS XNPY_FILES)
++      foreach(suffix .be.npy .le.npy)
++          configure_file(${CMAKE_CURRENT_SOURCE_DIR}/files/xnpy_files/${filename}${suffix}
++              ${CMAKE_CURRENT_BINARY_DIR}/files/xnpy_files/${filename}${suffix} COPYONLY)
++      endforeach()
++  endforeach()
++endif()
+ 
+ file(GLOB XTENSOR_PREPROCESS_FILES files/cppy_source/*.cppy)
+ 

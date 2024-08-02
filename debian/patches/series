@@ -1,0 +1,6 @@
+xsimd_xcomplex.patch
+badarch_skip_test_xnpy.patch
+skip_test_xreducer_average.patch
+docs_mathjax.patch
+gcc13_test_precision.patch
+test_xinfo_no_clang.patch

@@ -1,0 +1,23 @@
+Index: xtensor/docs/Doxyfile
+===================================================================
+--- xtensor.orig/docs/Doxyfile	2022-06-25 11:11:50.624052349 +0200
++++ xtensor/docs/Doxyfile	2022-06-25 11:11:50.624052349 +0200
+@@ -21,3 +21,5 @@
+ # Allow for rst directives and advanced functions e.g. grid tables
+ ALIASES  = "rst=\verbatim embed:rst:leading-asterisk"
+ ALIASES += "endrst=\endverbatim"
++
++MATHJAX_RELPATH        = file:///usr/share/javascript/mathjax/MathJax.js
+Index: xtensor/docs/source/conf.py
+===================================================================
+--- xtensor.orig/docs/source/conf.py	2022-06-25 01:55:13.698878871 +0200
++++ xtensor/docs/source/conf.py	2022-06-25 11:13:29.169814023 +0200
+@@ -15,6 +15,8 @@
+ 
+ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+ 
++mathjax_path = 'file:///usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
++
+ def setup(app):
+     app.add_css_file("main_stylesheet.css")
+ 

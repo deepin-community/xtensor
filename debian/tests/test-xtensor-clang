@@ -1,0 +1,1 @@
+CC=clang CXX=clang++ debian/tests/test-xtensor

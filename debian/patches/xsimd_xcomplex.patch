@@ -1,0 +1,15 @@
+Index: xtensor/include/xtensor/xcomplex.hpp
+===================================================================
+--- xtensor.orig/include/xtensor/xcomplex.hpp	2021-03-10 09:43:50.670981563 +0200
++++ xtensor/include/xtensor/xcomplex.hpp	2021-09-13 00:35:43.999047813 +0300
+@@ -15,6 +15,10 @@
+ 
+ #include <xtl/xcomplex.hpp>
+ 
++#ifdef XTENSOR_USE_XSIMD
++#include <xsimd/xsimd.hpp>
++#endif
++
+ #include "xtensor/xbuilder.hpp"
+ #include "xtensor/xexpression.hpp"
+ #include "xtensor/xoffset_view.hpp"

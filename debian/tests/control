@@ -1,0 +1,17 @@
+Tests: test-xtensor
+Depends: cmake,
+         g++,
+         doctest-dev,
+         libxtensor-dev,
+#         libxsimd-dev (>= 10.0.0~) [!arm64 !armel !armhf !ppc64el !riscv64 !s390x],
+#         libxsimd-dev (<< 11) [!arm64 !armel !armhf !ppc64el !riscv64 !s390x]
+Restrictions: allow-stderr
+
+Tests: test-xtensor-clang
+Depends: clang,
+         cmake,
+         doctest-dev,
+         libxtensor-dev,
+#         libxsimd-dev (>= 10.0.0~) [!arm64 !armel !armhf !ppc64el !riscv64 !s390x],
+#         libxsimd-dev (<< 11) [!arm64 !armel !armhf !ppc64el !riscv64 !s390x]
+Restrictions: allow-stderr
